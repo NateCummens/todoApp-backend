@@ -44,7 +44,7 @@ app.post('/', (req, res) =>{
         res.status(418).send({message:'We need a task!'});
     }
 
-    taskList.push({"id":id, "content": task})
+    taskList.push({"id":id, "content": task, "completed": false})
 
     res.send({
         tasks:`A task of ${task} and ID of ${id} was created`,
