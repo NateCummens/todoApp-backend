@@ -47,7 +47,7 @@ app.post('/', (req, res) =>{
     taskList.push({"id":id, "content": task, "completed": false})
 
     res.send({
-        tasks:`A task of ${task} and ID of ${id} was created`,
+        tasks:`A task of "${task}" and ID of ${id} was created`,
     });
 });
 
@@ -58,7 +58,7 @@ app.patch('/:id', (req, res) =>{
         res.status(404).send();
     }
     task.completed = !task.completed;
-    res.status(200).send(`marked ${task.content} complete status to ${task.completed}`);
+    res.status(200).send(`marked "${task.content}" complete status to ${task.completed}`);
 })
 
 
@@ -67,7 +67,7 @@ app.delete('/:id',(req,res)=>{
     taskList.forEach((task)=>{
         if(id == task.id){
             taskList.splice(id, 1);
-            res.status(200).send(`${task.content} was removed from list`)
+            res.status(200).send(`"${task.content}" was removed from list`)
         }
     })
 
