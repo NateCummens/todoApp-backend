@@ -14,20 +14,25 @@ taskList = [];
 app.get('/', (req, res) =>{
     if(taskList.length == 0){
         res.status(200).send('No Tasks');
+    } else{
+         res.status(200).send(taskList);
     }
-    res.status(200).send(taskList);
+   
 })
 
 app.get('/:id', (req, res) =>{
     const { id } = req.params;
-    taskList.forEach((task)=>{
-        if (task.id == id){
+    const task = taskList.find(task => task.id == id)
+    
+        if (!task){
+            res.status(404).send();
+            
+        } else {
             res.status(200).send({
                 tasks:`${task.content}`,
             })
         }
-    })
-    res.status(404).send();
+    
 })
 
 app.post('/', (req, res) =>{
@@ -45,6 +50,7 @@ app.post('/', (req, res) =>{
         tasks:`A task of ${task} and ID of ${id} was created`,
     });
 });
+
 
 app.delete('/:id',(req,res)=>{
     const {id} = req.params;
