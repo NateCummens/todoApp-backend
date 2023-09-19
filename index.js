@@ -37,7 +37,7 @@ app.get('/:id', (req, res) =>{
 
 app.post('/', (req, res) =>{
 
-    const id = taskList.length;
+    const id = Math.random();
     const {task} = req.body;
 
     if(!task){
@@ -46,9 +46,9 @@ app.post('/', (req, res) =>{
 
     taskList.push({"id":id, "content": task, "completed": false})
 
-    res.send({
-        tasks:`A task of "${task}" and ID of ${id} was created`,
-    });
+    res.send(
+        `A task of "${task}" and ID of ${id} was created`,
+    );
 });
 
 app.patch('/:id', (req, res) =>{
