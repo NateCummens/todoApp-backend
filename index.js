@@ -29,7 +29,7 @@ app.get('/:id', (req, res) =>{
             
         } else {
             res.status(200).send({
-                tasks:`${task.content}`,
+                task
             })
         }
     
@@ -50,6 +50,16 @@ app.post('/', (req, res) =>{
         tasks:`A task of ${task} and ID of ${id} was created`,
     });
 });
+
+app.patch('/:id', (req, res) =>{
+    const { id } = req.params;
+    const task = taskList.find(task => task.id == id)
+    if(!task){
+        res.status(404).send();
+    }
+    task.completed = !task.completed;
+    res.status(200).send(`marked ${task.content} complete status to ${task.completed}`);
+})
 
 
 app.delete('/:id',(req,res)=>{
