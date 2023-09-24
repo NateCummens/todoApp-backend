@@ -1,74 +1,118 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const {ObjectId} = require('mongodb');
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+const taskSchema = new mongoose.Schema({
+    content:String,
+    dateCreated:{ type: Date, default: Date.now },
+    completed:{
+        type:Boolean,
+        default:false
+    }
+})
+
+const Task = mongoose.model('Task', taskSchema);
+
+async function connectToDb() {
+        await mongoose.connect('mongodb://127.0.0.1:27017/TaskList');
+        let db = mongoose.connection;
+        db.on("error", console.error.bind(console, "connection error: "));
+        db.once("open", function () {
+          console.log("Connected successfully");
+        });
+   }
+
+connectToDb().catch(err => console.log(err));
 
 app.listen(
     PORT, 
     () => console.log(`it is running on http://localhost:${PORT}`)
 )
 
-taskList = [];
+app.get('/', async (req, res) =>{
+    let tasks;
+    try {
+        tasks = await Task.find()
+    } catch (error) {
+        console.log(error)
+    }
 
-app.get('/', (req, res) =>{
-    if(taskList.length == 0){
-        res.status(200).send('No Tasks');
+    if(tasks){
+        res.status(200).json(tasks)
+    }else{
+        res.status(500).send('failed to find tasks');
+
+    }
+    
+})
+
+app.get('/:id', async (req, res) =>{
+    let task;
+
+    if(ObjectId.isValid(req.params.id)){
+    try {
+        task = await Task.findById(req.params.id)
+    } catch (error) {
+        console.log(error);
+    }
+    }
+
+    if(task){
+        res.status(200).send(task)
     } else{
-         res.status(200).send(taskList);
+        res.status(404).send('no task found')
     }
-   
-})
-
-app.get('/:id', (req, res) =>{
-    const { id } = req.params;
-    const task = taskList.find(task => task.id == id)
-    
-        if (!task){
-            res.status(404).send();
-            
-        } else {
-            res.status(200).send({
-                task
-            })
-        }
     
 })
 
-app.post('/', (req, res) =>{
-
-    const id = Math.random();
-    const {task} = req.body;
-
-    if(!task){
-        res.status(418).send({message:'We need a task!'});
+app.post('/', async (req, res) =>{
+    try {
+        await Task.create(req.body);
+    } catch (error) {
+        console.log(error)
     }
+    res.status(201).send("Task Created")
 
-    taskList.push({"id":id, "content": task, "completed": false})
-
-    res.send(
-        `A task of "${task}" and ID of ${id} was created`,
-    );
 });
 
-app.patch('/:id', (req, res) =>{
-    const { id } = req.params;
-    const task = taskList.find(task => task.id == id)
-    if(!task){
-        res.status(404).send();
+app.patch('/:id', async (req, res) =>{
+    let task;
+
+    if(ObjectId.isValid(req.params.id)){
+    try {
+        task = await Task.findByIdAndUpdate(req.params.id, req.body)
+    } catch (error) {
+        console.log(error);
     }
-    task.completed = !task.completed;
-    res.status(200).send(`marked "${task.content}" complete status to ${task.completed}`);
+    }
+
+    if(task){
+        res.status(200).send('task updated')
+    } else{
+        res.status(404).send('no task found')
+    }
 })
 
 
-app.delete('/:id',(req,res)=>{
-    const {id} = req.params;
-    taskList.forEach((task)=>{
-        if(id == task.id){
-            taskList.splice(id, 1);
-            res.status(200).send(`"${task.content}" was removed from list`)
-        }
-    })
+app.delete('/:id', async (req,res)=>{
+    let task;
+
+    if(ObjectId.isValid(req.params.id)){
+    try {
+        task = await Task.findByIdAndDelete(req.params.id)
+    } catch (error) {
+        console.log(error);
+    }
+    }
+
+    if(task){
+        res.status(200).send('task Deleted')
+    } else{
+        res.status(404).send('no task found')
+    }
 
 })
