@@ -39,7 +39,7 @@ app.get('/', async (req, res) =>{
     if(tasks){
         res.status(200).json(tasks)
     }else{
-        res.status(500).send('failed to find tasks');
+        res.status(404).send('failed to find tasks');
 
     }
     
