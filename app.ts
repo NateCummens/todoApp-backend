@@ -106,18 +106,26 @@ app.get("/count", async (req:any, res:any) =>{
 app.get("/bydate", async (req:any, res:any) =>{
 
     let tasks;
-    let {date} = req.body
 
     try {
         tasks = await Task.aggregate([
-            {$addFields:{dateCreated: {$dateToString:{format: "%Y-%m-%d", date: "$dateCreated"}}}},
-            {$match:{dateCreated:date}}
+            {$group:{ _id:{$dateToString:{format: "%Y-%m-%d", date: "$dateCreated"}},
+            count:{$sum:1},
+            tasks:{
+                $push:{
+                    _id:"$_id",
+                    content:'$content',
+                    completed:"$completed"
+                }
+            }
+        }}
         ])
+
     } catch (error) {
         console.log(error)
     }
 
-    if(tasks.length > 0){
+    if(tasks){
         res.status(200).send(tasks)
     }else{
         res.status(404).send('no task found');

@@ -98,17 +98,24 @@ app.get("/count", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.get("/bydate", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let tasks;
-    let { date } = req.body;
     try {
         tasks = yield Task.aggregate([
-            { $addFields: { dateCreated: { $dateToString: { format: "%Y-%m-%d", date: "$dateCreated" } } } },
-            { $match: { dateCreated: date } }
+            { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$dateCreated" } },
+                    count: { $sum: 1 },
+                    tasks: {
+                        $push: {
+                            _id: "$_id",
+                            content: '$content',
+                            completed: "$completed"
+                        }
+                    }
+                } }
         ]);
     }
     catch (error) {
         console.log(error);
     }
-    if (tasks.length > 0) {
+    if (tasks) {
         res.status(200).send(tasks);
     }
     else {
