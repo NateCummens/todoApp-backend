@@ -108,7 +108,7 @@ app.get("/bydate", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     catch (error) {
         console.log(error);
     }
-    if (tasks) {
+    if (tasks.length > 0) {
         res.status(200).send(tasks);
     }
     else {

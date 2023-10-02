@@ -117,7 +117,7 @@ app.get("/bydate", async (req:any, res:any) =>{
         console.log(error)
     }
 
-    if(tasks){
+    if(tasks.length > 0){
         res.status(200).send(tasks)
     }else{
         res.status(404).send('no task found');
