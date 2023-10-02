@@ -134,7 +134,6 @@ app.get("/bydate", async (req:any, res:any) =>{
 
 app.get('/:id', async (req:any, res:any) =>{
     let task;
-    console.log(req.body)
 
     if(ObjectId.isValid(req.params.id)){
     try {

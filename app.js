@@ -124,7 +124,6 @@ app.get("/bydate", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 app.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let task;
-    console.log(req.body);
     if (ObjectId.isValid(req.params.id)) {
         try {
             task = yield Task.findById(req.params.id);
