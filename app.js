@@ -42,7 +42,7 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json(tasks);
     }
     else {
-        res.status(404).send('failed to find tasks');
+        res.status(404).send({ status: 'failed to find tasks' });
     }
 }));
 app.get("/completed", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -59,7 +59,7 @@ app.get("/completed", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(200).send(tasks);
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
 app.get("/pending", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,7 +76,7 @@ app.get("/pending", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).send(tasks);
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
 app.get("/count", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -93,7 +93,7 @@ app.get("/count", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).send(tasks);
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
 app.get("/bydate", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -119,7 +119,7 @@ app.get("/bydate", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(200).send(tasks);
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
 app.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -136,7 +136,7 @@ app.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).send(task);
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
 app.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -146,7 +146,7 @@ app.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
         console.log(error);
     }
-    res.status(201).send("Task Created");
+    res.status(201).send({ status: "Task Created" });
 }));
 app.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let task;
@@ -159,10 +159,10 @@ app.patch('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     if (task) {
-        res.status(200).send('task updated');
+        res.status(200).send({ status: 'task updated' });
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
 app.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -176,9 +176,10 @@ app.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     if (task) {
-        res.status(200).send('task Deleted');
+        res.status(200).send({ status: 'Task Deleted' });
     }
     else {
-        res.status(404).send('no task found');
+        res.status(404).send({ status: 'no task found' });
     }
 }));
+module.exports = app; // for testing

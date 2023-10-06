@@ -39,7 +39,7 @@ app.get('/', async (req:any, res:any) =>{
     if(tasks){
         res.status(200).json(tasks)
     }else{
-        res.status(404).send('failed to find tasks');
+        res.status(404).send({status:'failed to find tasks'});
 
     }
     
@@ -61,7 +61,7 @@ app.get("/completed", async (req:any, res:any) =>{
     if(tasks.length > 0){
         res.status(200).send(tasks)
     }else{
-        res.status(404).send('no task found');
+        res.status(404).send({status:'no task found'});
     }
 })
 
@@ -80,7 +80,7 @@ app.get("/pending", async (req:any, res:any) =>{
     if(tasks.length > 0){
         res.status(200).send(tasks)
     }else{
-        res.status(404).send('no task found');
+        res.status(404).send({status:'no task found'});
     }
 })
 
@@ -99,7 +99,7 @@ app.get("/count", async (req:any, res:any) =>{
     if(tasks.length > 0){
         res.status(200).send(tasks)
     }else{
-        res.status(404).send('no task found');
+        res.status(404).send({status:'no task found'});
     }
 })
 
@@ -128,7 +128,7 @@ app.get("/bydate", async (req:any, res:any) =>{
     if(tasks){
         res.status(200).send(tasks)
     }else{
-        res.status(404).send('no task found');
+        res.status(404).send({status:'no task found'});
     }
 })
 
@@ -146,7 +146,7 @@ app.get('/:id', async (req:any, res:any) =>{
     if(task){
         res.status(200).send(task)
     } else{
-        res.status(404).send('no task found')
+        res.status(404).send({status:'no task found'})
     }
     
 })
@@ -157,7 +157,7 @@ app.post('/', async (req:any, res:any) =>{
     } catch (error) {
         console.log(error)
     }
-    res.status(201).send("Task Created")
+    res.status(201).send({status:"Task Created"})
 
 });
 
@@ -173,9 +173,9 @@ app.patch('/:id', async (req:any, res:any) =>{
     }
 
     if(task){
-        res.status(200).send('task updated')
+        res.status(200).send({status:'task updated'})
     } else{
-        res.status(404).send('no task found')
+        res.status(404).send({status:'no task found'})
     }
 })
 
@@ -192,9 +192,12 @@ app.delete('/:id', async (req:any, res:any)=>{
     }
 
     if(task){
-        res.status(200).send('task Deleted')
+        res.status(200).send({status:'Task Deleted'})
     } else{
-        res.status(404).send('no task found')
+        res.status(404).send({status:'no task found'})
     }
 
 })
+
+
+module.exports = app; // for testing
