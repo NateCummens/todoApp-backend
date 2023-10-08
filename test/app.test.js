@@ -48,6 +48,10 @@ describe("/Get Task", () => {
             .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.a('array');
+            expect(res.body[0]).to.be.a('object');
+            expect(res.body[0]._id).to.be.a('string');
+            expect(res.body[0].count).to.be.a('number');
+            expect(res.body[0].tasks).to.be.a('array');
             done();
         });
     });
