@@ -14,7 +14,6 @@ const taskSchema = new mongoose.Schema({
         default:false
     }
 })
-console.log(URI)
 const Task = mongoose.model('Task', taskSchema);
 
 async function connectToDb() {
