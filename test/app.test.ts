@@ -1,8 +1,38 @@
+
 const chai = require("chai")
 let expect = chai.expect;
 let chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 let server = require("../app")
+
+describe("/Post Task", ()=>{
+    it("it post a new Tasks", (done)=>{
+        const task = {
+            "_id":"651b49fc91fc797ce2590098",
+            "content":"this is a testing app",
+            "completed" : true
+        }
+        chai.request(server)
+            .post('/')
+            .type('json')
+            .send(task)
+            .end((err:any, res:any) =>{
+                expect(res).to.have.status(201);
+                expect(res.body.status).to.equal('Task Created');
+                done();
+            })
+    })
+    it("/Get returns a single task with the id", (done)=>{
+        const id = "651b49fc91fc797ce2590098"
+        chai.request(server)
+        .get('/'+ id)
+        .end((err:any, res:any) =>{
+            expect(res).to.have.status(200);
+            expect(res.body).to.be.a('object');
+            done();
+        })
+    })
+})
 
 describe("/Get Task", ()=>{
     it("it should Get all the Tasks", (done)=>{
@@ -54,34 +84,6 @@ describe("/Get Task", ()=>{
                 expect(res.body[0].tasks).to.be.a('array');
                 done();
             })
-    })
-})
-
-describe("/Post Task", ()=>{
-    it("it post a new Tasks", (done)=>{
-        const task = {
-            "_id":"651b49fc91fc797ce2590098",
-            "content":"this is a testing app"
-        }
-        chai.request(server)
-            .post('/')
-            .type('json')
-            .send(task)
-            .end((err:any, res:any) =>{
-                expect(res).to.have.status(201);
-                expect(res.body.status).to.equal('Task Created');
-                done();
-            })
-    })
-    it("/Get returns a single task with the id", (done)=>{
-        const id = "651b49fc91fc797ce2590098"
-        chai.request(server)
-        .get('/'+ id)
-        .end((err:any, res:any) =>{
-            expect(res).to.have.status(200);
-            expect(res.body).to.be.a('object');
-            done();
-        })
     })
 })
 

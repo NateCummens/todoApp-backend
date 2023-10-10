@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb');
 const app = express();
 const PORT = 3000;
+const URI = process.env.DatabaseUrl;
 app.use(express.json());
 const taskSchema = new mongoose.Schema({
     content: String,
@@ -22,10 +23,11 @@ const taskSchema = new mongoose.Schema({
         default: false
     }
 });
+console.log(URI);
 const Task = mongoose.model('Task', taskSchema);
 function connectToDb() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield mongoose.connect('mongodb://127.0.0.1:27017/TaskList');
+        yield mongoose.connect(URI);
     });
 }
 connectToDb().catch(err => console.log(err));
