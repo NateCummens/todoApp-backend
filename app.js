@@ -12,7 +12,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb');
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 const URI = process.env.DatabaseUrl;
 app.use(express.json());
 const taskSchema = new mongoose.Schema({
