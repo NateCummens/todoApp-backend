@@ -15,6 +15,7 @@ const app = express();
 const PORT = 8080;
 const URI = process.env.DatabaseUrl;
 app.use(express.json());
+const swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
 const taskSchema = new mongoose.Schema({
     content: String,
     dateCreated: { type: Date, default: Date.now },
@@ -30,6 +31,7 @@ function connectToDb() {
     });
 }
 connectToDb().catch(err => console.log(err));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.listen(PORT, () => console.log(`app is running on http://localhost:${PORT}`));
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let tasks;

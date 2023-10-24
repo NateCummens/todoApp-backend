@@ -6,6 +6,9 @@ const PORT = 8080;
 const URI = process.env.DatabaseUrl
 app.use(express.json());
 
+const swaggerUi = require('swagger-ui-express'),
+    swaggerDocument = require('./swagger.json');
+
 const taskSchema = new mongoose.Schema({
     content:String,
     dateCreated:{ type: Date, default: Date.now },
@@ -21,6 +24,16 @@ async function connectToDb() {
    }
 
 connectToDb().catch(err => console.log(err));
+
+
+
+
+    app.use(
+        '/api-docs',
+        swaggerUi.serve, 
+        swaggerUi.setup(swaggerDocument)
+      );
+
 
 app.listen(
     PORT, 
