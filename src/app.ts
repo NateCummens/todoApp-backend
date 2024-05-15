@@ -1,9 +1,10 @@
+import "dotenv/config";
 const express = require('express');
 const mongoose = require('mongoose');
 const {ObjectId} = require('mongodb');
 const app = express();
-const PORT = 8080;
-const URI = process.env.DatabaseUrl
+const PORT = process.env.PORT;
+const URI = process.env.URI
 app.use(express.json());
 
 const taskSchema = new mongoose.Schema({
@@ -16,11 +17,18 @@ const taskSchema = new mongoose.Schema({
 })
 const Task = mongoose.model('Task', taskSchema);
 
-async function connectToDb() {
-        await mongoose.connect(URI);
-   }
+// async function connectToDb() {
+//         await mongoose.connect(URI);
+//    }
 
-connectToDb().catch(err => console.log(err));
+// connectToDb().catch(err => console.log(err));
+
+mongoose.set("strictQuery", false)
+mongoose.connect(URI)
+        .then((): void => console.log("[SERVER]: Database is connected"))
+        .catch((err: string): void =>
+          console.log("[ERROR]: Database is not connected", err)
+        );
 
 app.listen(
     PORT, 
