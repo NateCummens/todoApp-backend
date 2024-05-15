@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo Running npm install
+      - npm install # run npm install to install all dependencies
+artifacts:
+  files:
+    -'**/*' #copy all build files to s3 location
