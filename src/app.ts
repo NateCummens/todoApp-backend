@@ -2,10 +2,15 @@ import "dotenv/config";
 const express = require('express');
 const mongoose = require('mongoose');
 const {ObjectId} = require('mongodb');
+const apicache = require("apicache");
+
 const app = express();
 const PORT = process.env.PORT;
-const URI = process.env.URI
+const URI = process.env.URI;
+let cache = apicache.middleware;
 app.use(express.json());
+app.use(cache('5 minutes'));
+
 
 const taskSchema = new mongoose.Schema({
     content:String,
