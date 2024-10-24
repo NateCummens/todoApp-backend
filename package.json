@@ -7,7 +7,7 @@
     "start": "ts-node ./src/app.ts",
     "build": "tsc",
     "dev": "nodemon ./src/app.ts",
-    "test": "mocha ./dist/test --exit"
+    "test": "tsc && mocha ./dist/test --exit"
   },
   "author": "",
   "license": "ISC",
