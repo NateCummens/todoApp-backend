@@ -3,7 +3,7 @@ const chai = require("chai")
 let expect = chai.expect;
 let chaiHttp = require("chai-http");
 chai.use(chaiHttp);
-let server = require("../app")
+let server = require("../src/app")
 
 describe("/Post Task", ()=>{
     it("it post a new Tasks", (done)=>{
