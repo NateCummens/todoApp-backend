@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import Task from "../models/taskSchema"
+// import {client} from "../app"
 
 const router: Router = Router();
 
@@ -9,17 +10,18 @@ router.get('/', async (req:any, res:Response) =>{
     let tasks;
     try {
         tasks = await Task.find()
+
+
+        if(tasks){
+            // await client.setEx(process.env.REDIS_KEY, 3600, JSON.stringify(tasks));
+            res.status(200).json(tasks)
+        }else{
+            res.status(404).send({status:'failed to find tasks'});
+
+        }
     } catch (error) {
         console.log(error)
     }
-
-    if(tasks){
-        res.status(200).json(tasks)
-    }else{
-        res.status(404).send({status:'failed to find tasks'});
-
-    }
-    
 })
 
 router.get("/completed", async (req:Request, res:Response) =>{
