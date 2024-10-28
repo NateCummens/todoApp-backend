@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import Task from "../models/taskSchema"
-// import {client} from "../app"
+const client = require("../redis/redisClient");
 
 const router: Router = Router();
 
@@ -10,14 +10,17 @@ router.get('/', async (req:any, res:Response) =>{
     let tasks;
     try {
         tasks = await Task.find()
-
-
         if(tasks){
-            // await client.setEx(process.env.REDIS_KEY, 3600, JSON.stringify(tasks));
-            res.status(200).json(tasks)
+            try {
+            console.log("save to cache")
+            await client.setEx(req.originalUrl, 30, JSON.stringify(tasks));
+            res.status(200).json(tasks)  
+            } catch (error) {
+                console.error("Error saving to cache");
+                res.status(200).json(tasks) 
+            }
         }else{
             res.status(404).send({status:'failed to find tasks'});
-
         }
     } catch (error) {
         console.log(error)

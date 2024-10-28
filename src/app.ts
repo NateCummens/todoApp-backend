@@ -2,50 +2,33 @@ import "dotenv/config";
 const express = require('express');
 import type {Response, Request, NextFunction} from 'express';
 const mongoose = require('mongoose');
-// const apicache = require("apicache");
-// const redis = require("redis");
-import routes from "./routes/routes"
+import routes from "./routes/routes";
+const client = require("./redis/redisClient");
 
-// export const client = redis.createClient({
-//     host: 'rediscache',
-//     port: 6379,
-//     enable_offline_queue: false
-// });
+export const cacheMiddleWare = async (req:Request, res:Response, next:NextFunction)=>{
+  try {
+    console.log('used middleware');
+    const cacheKey = req.originalUrl;
+    const data = await client.get(cacheKey);
 
-// client.connect().then(()=>{
-//     console.log("Connected to Redis...");
-// })
-// .catch((err:Error)=>{
-//     console.error("Redis Error", err);
-// });
+    if (data !== null) {
+      console.log('used redis')
+        return res.json(JSON.parse(data));
+    } else {
+        next();
+    }
+
+  } catch (error) {
+    console.error(error);
+    next();
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT;
 const URI = process.env.URI;
 app.use(express.json());
-// let cache = apicache.middleware;
-app.use("/", routes);
-// app.use(cache('5 minutes'));
-
-
-
-// app.get("*",async (req:Request, res:Response, next:NextFunction)=>{
-//     const cacheKey = 'myData';
-//     try {
-//             client.get(cacheKey, (err:Error, data:any)=>{
-//             if(err) throw err;
-
-//             if(data){
-//                 console.log("used redis")
-//                 return res.send(JSON.parse(data))
-//             }
-//         })
-//         next();
-//     } catch (error) {
-        
-//     }
-
-// })
+app.use("/", cacheMiddleWare, routes);
 
 mongoose.set("strictQuery", false)
 mongoose.connect(URI)
@@ -59,4 +42,7 @@ app.listen(
     () => console.log(`app is running on http://localhost:${PORT}`)
 )
 
-module.exports = app; // for testing
+module.exports = {
+  app, //for testing
+  cacheMiddleWare,
+};
