@@ -8,7 +8,7 @@ const client = require("./redis/redisClient");
 export const cacheMiddleWare = async (req:Request, res:Response, next:NextFunction)=>{
   try {
     console.log('used middleware');
-    const cacheKey = req.originalUrl;
+    const cacheKey = `${req.method}:${req.originalUrl}`;
     const data = await client.get(cacheKey);
 
     if (data !== null) {

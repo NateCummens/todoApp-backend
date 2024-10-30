@@ -13,7 +13,7 @@ router.get('/', async (req:any, res:Response) =>{
         if(tasks){
             try {
             console.log("save to cache")
-            await client.setEx(req.originalUrl, 30, JSON.stringify(tasks));
+            await client.setEx(`${req.method}:${req.originalUrl}`, 30, JSON.stringify(tasks));
             res.status(200).json(tasks)  
             } catch (error) {
                 console.error("Error saving to cache");
